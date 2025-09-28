@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧图书馆 - 馆藏查询</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            grid-column: 1 / -1;
+            justify-self: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .book-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .book-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+
+        .info-item i {
+            color: #667eea;
+            width: 20px;
+        }
+
+        .location-info {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .location-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status.available {
+            background: #e8f5e8;
+            color: #2d7d2d;
+        }
+
+        .status.borrowed {
+            background: #ffe8e8;
+            color: #d42c2c;
+        }
+
+        .reserve-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .reserve-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .recommendations-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .recommendations-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendation-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-name {
+            color: #555;
+        }
+
+        .view-btn {
+            background: transparent;
+            color: #667eea;
+            border: 1px solid #667eea;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-decoration: none;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .book-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .recommendation-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> 返回主页
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-book"></i> 智慧图书馆馆藏查询</h1>
+            <p>快速查找资料，精准定位位置</p>
+        </div>
+
+        <!-- 基础检索区 -->
+        <div class="search-section">
+            <h2 class="search-title">
+                <i class="fas fa-search"></i>
+                基础检索
+            </h2>
+            <div class="search-form">
+                <div class="search-row">
+                    <div class="form-group">
+                        <label>关键词检索</label>
+                        <input type="text" id="keyword" placeholder="输入书名、作者或ISBN...">
+                    </div>
+                    <div class="form-group">
+                        <label>资料类型</label>
+                        <select id="category">
+                            <option value="">选择资料类型</option>
+                            <option value="经管类">经管类</option>
+                            <option value="语言文艺类">语言文艺类</option>
+                            <option value="外文资料">外文资料</option>
+                            <option value="报刊工具书">报刊工具书</option>
+                            <option value="计算机类">计算机类</option>
+                            <option value="蒙文资料">蒙文资料</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>楼层检索</label>
+                        <select id="floor">
+                            <option value="">选择楼层</option>
+                            <option value="一楼">一楼</option>
+                            <option value="二楼">二楼</option>
+                            <option value="三楼">三楼</option>
+                            <option value="四楼">四楼</option>
+                            <option value="五楼">五楼</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="search-btn" onclick="searchBooks()">
+                    <i class="fas fa-search"></i> 查询
+                </button>
+            </div>
+        </div>
+
+        <!-- 检索结果展示区 -->
+        <div class="results-section" id="resultsSection">
+            <h2 class="results-title">
+                <i class="fas fa-list"></i>
+                检索结果
+            </h2>
+            <div id="resultsContainer">
+                <!-- 动态生成结果 -->
+            </div>
+        </div>
+
+        <!-- 热门馆藏推荐区 -->
+        <div class="recommendations-section">
+            <h2 class="recommendations-title">
+                <i class="fas fa-star"></i>
+                热门馆藏推荐
+            </h2>
+            <div class="recommendation-categories">
+                <div class="category-card">
+                    <h3 class="category-title">
+                        <i class="fas fa-building"></i>
+                        二楼经管专区
+                    </h3>
+                    <ul class="recommendation-list">
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《管理学原理》</span>
+                            <button class="view-btn" onclick="viewBook('管理学原理', '二楼经管阅览室1A')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《微观经济学》</span>
+                            <button class="view-btn" onclick="viewBook('微观经济学', '二楼经管阅览室1B')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《会计学基础》</span>
+                            <button class="view-btn" onclick="viewBook('会计学基础', '二楼经管阅览室2A')">查详情</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <h3 class="category-title">
+                        <i class="fas fa-laptop"></i>
+                        三楼计科专区
+                    </h3>
+                    <ul class="recommendation-list">
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《数据结构》</span>
+                            <button class="view-btn" onclick="viewBook('数据结构', '三楼计科阅览室')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《机器学习实战》</span>
+                            <button class="view-btn" onclick="viewBook('机器学习实战', '三楼计科阅览室')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《Python编程》</span>
+                            <button class="view-btn" onclick="viewBook('Python编程', '三楼计科阅览室')">查详情</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <h3 class="category-title">
+                        <i class="fas fa-newspaper"></i>
+                        四楼报刊专区
+                    </h3>
+                    <ul class="recommendation-list">
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《人民日报》</span>
+                            <button class="view-btn" onclick="viewBook('人民日报', '四楼报刊阅览室A')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《计算机学报》</span>
+                            <button class="view-btn" onclick="viewBook('计算机学报', '四楼报刊阅览室B')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《经济研究》</span>
+                            <button class="view-btn" onclick="viewBook('经济研究', '四楼报刊阅览室A')">查详情</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="category-card">
+                    <h3 class="category-title">
+                        <i class="fas fa-globe"></i>
+                        五楼外文专区
+                    </h3>
+                    <ul class="recommendation-list">
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《English Literature》</span>
+                            <button class="view-btn" onclick="viewBook('English Literature', '五楼政法外文阅览室')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《International Law》</span>
+                            <button class="view-btn" onclick="viewBook('International Law', '五楼政法外文阅览室')">查详情</button>
+                        </li>
+                        <li class="recommendation-item">
+                            <span class="recommendation-name">《Business English》</span>
+                            <button class="view-btn" onclick="viewBook('Business English', '五楼政法外文阅览室')">查详情</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟图书数据
+        const mockBooks = [
+            {
+                title: "管理学原理",
+                author: "周三多",
+                publisher: "高等教育出版社",
+                isbn: "9787040123333",
+                category: "经管类",
+                floor: "二楼",
+                location: "二楼-经管阅览室1A-第3书架",
+                status: "在馆",
+                borrowable: "馆内阅读"
+            },
+            {
+                title: "数据结构",
+                author: "严蔚敏",
+                publisher: "清华大学出版社",
+                isbn: "9787302023685",
+                category: "计算机类",
+                floor: "三楼",
+                location: "三楼-计科阅览室-第2书架",
+                status: "已借出",
+                borrowable: "可外借",
+                returnDate: "2024-01-15"
+            },
+            {
+                title: "微观经济学",
+                author: "平狄克",
+                publisher: "中国人民大学出版社",
+                isbn: "9787300042342",
+                category: "经管类",
+                floor: "二楼",
+                location: "二楼-经管阅览室1B-第5书架",
+                status: "在馆",
+                borrowable: "馆内阅读"
+            }
+        ];
+
+        function searchBooks() {
+            const keyword = document.getElementById('keyword').value;
+            const category = document.getElementById('category').value;
+            const floor = document.getElementById('floor').value;
+
+            // 显示结果区域
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // 模拟搜索结果
+            let results = mockBooks;
+            
+            if (keyword) {
+                results = results.filter(book => 
+                    book.title.includes(keyword) || 
+                    book.author.includes(keyword) ||
+                    book.isbn.includes(keyword)
+                );
+            }
+            
+            if (category) {
+                results = results.filter(book => book.category === category);
+            }
+            
+            if (floor) {
+                results = results.filter(book => book.floor === floor);
+            }
+
+            displayResults(results);
+            
+            // 滚动到结果区域
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displayResults(books) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (books.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; font-size: 1.2rem;">未找到相关图书</p>';
+                return;
+            }
+
+            container.innerHTML = books.map(book => `
+                <div class="book-item">
+                    <h3 class="book-title">${book.title}</h3>
+                    <div class="book-info">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <span>作者：${book.author}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-building"></i>
+                            <span>出版社：${book.publisher}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-barcode"></i>
+                            <span>ISBN：${book.isbn}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-tags"></i>
+                            <span>类型：${book.category}</span>
+                        </div>
+                    </div>
+                    <div class="location-info">
+                        <div class="location-title">
+                            <i class="fas fa-map-marker-alt"></i>
+                            馆藏位置
+                        </div>
+                        <p>${book.location}</p>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span class="status ${book.status === '在馆' ? 'available' : 'borrowed'}">
+                            ${book.status === '在馆' ? '在馆可借' : `已借出 (预计${book.returnDate}归还)`}
+                        </span>
+                        <button class="reserve-btn" onclick="reserveSeat('${book.location}')">
+                            <i class="fas fa-chair"></i> 预约该区域座位
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewBook(bookName, location) {
+            // 模拟查看详情
+            document.getElementById('keyword').value = bookName;
+            searchBooks();
+        }
+
+        function reserveSeat(location) {
+            // 提取楼层信息
+            const floor = location.split('-')[0];
+            const room = location.split('-')[1];
+            
+            // 跳转到对应楼层的预约页面
+            alert(`即将跳转到 ${floor} ${room} 的座位预约页面`);
+            // 实际应用中这里应该是：window.location.href = `index.html#${floor}-${room}`;
+        }
+
+        // 回车键搜索
+        document.getElementById('keyword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBooks();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 基础样式 */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: #1D2129;
+    background-color: #F5F7FA;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 导航栏动画 */
+#navbar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 卡片悬停效果增强 */
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px -5px rgba(22, 93, 255, 0.15);
+}
+
+/* 按钮动画 */
+a.btn-primary,
+button.btn-primary {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a.btn-primary:hover,
+button.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px -3px rgba(22, 93, 255, 0.3);
+}
+
+/* 渐变背景 */
+.bg-gradient-blue {
+    background: linear-gradient(135deg, #165DFF 0%, #36CBCB 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient-blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNjY2MiPjwvcmVjdD4KPC9zdmc+');
+    opacity: 0.1;
+}
+
+/* 文字阴影 */
+.text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 标签样式 */
+.tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* 进度条动画 */
+.progress-bar {
+    transition: width 1s ease-in-out;
+}
+
+/* 数据卡片动画 */
+.data-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-card:hover {
+    transform: scale(1.02);
+}
+
+/* 折叠面板动画 */
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.collapsible-content.active {
+    max-height: 1000px;
+}
+
+/* 响应式图片 */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 加载动画 */
+.loading-spinner {
+    border: 3px solid rgba(22, 93, 255, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid #165DFF;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 淡入动画 */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 平滑出现动画 */
+.slide-up {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 媒体查询 - 小屏幕 */
+@media (max-width: 640px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* 媒体查询 - 中等屏幕 */
+@media (max-width: 768px) {
+    .md\:grid-cols-2,
+    .md\:grid-cols-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 无障碍增强 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 打印样式 */
+@media print {
+    nav,
+    .no-print {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+}
+
+/* 座位样式 */
+.seat {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* 空闲可预约状态 - 绿色实心椅 */
+.seat-available {
+    border: 3px solid #10B981;
+    background-color: #10B981;
+    color: white;
+}
+
+.seat-available:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.seat-available .seat-info {
+    display: none;
+}
+
+/* 已预约状态 - 蓝色实心椅 */
+.seat-reserved {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.seat-reserved:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* 已签到（使用中）状态 - 橙色实心椅 */
+.seat-occupied {
+    background-color: #F59E0B;
+    color: white;
+}
+
+.seat-occupied:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* 座位信息标签 */
+.seat-details {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+/* 临时离开按钮样式 */
+.leave-btn {
+    background-color: #EC4899;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background-color 0.2s;
+}
+
+.leave-btn:hover {
+    background-color: #DB2777;
+}
+
+/* 轮播图样式 */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    position: relative;
+}
+
+/* 特色轮播图幻灯片样式 */
+.featured-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 轮播图图片容器样式 */
+.featured-slide > div:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* 轮播图文字容器样式 - 确保始终可见 */
+.featured-slide > div:last-child {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* 图片容器样式，用于避免显示水印 */
+.img-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top; /* 调整图片位置，避免显示底部水印 */
+}
+
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    pointer-events: none;
+}
+
+.carousel-prev,
+.carousel-next {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #165DFF;
+    transition: all 0.3s ease;
+    pointer-events: all;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background-color: white;
+    transform: scale(1.1);
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background-color: white;
+    transform: scale(1.2);
+}
+
+/* 特色轮播图额外样式 */
+#featured-carousel .carousel-container {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#featured-carousel .indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+#featured-carousel .indicator.active {
+    width: 24px;
+    border-radius: 4px;
+    background-color: white;
+}
+
+#featured-carousel .indicator:hover {
+    background-color: white;
+}
+
+#featured-carousel button {
+    border: none;
+    outline: none;
+}
+
+/* 响应式轮播图 */
+@media (max-width: 768px) {
+    #featured-carousel .carousel-container {
+        height: 300px !important;
+    }
+    
+    #featured-carousel .indicator {
+        width: 6px;
+        height: 6px;
+    }
+    
+    #featured-carousel .indicator.active {
+        width: 18px;
+    }
+    
+    #featured-carousel button {
+        width: 36px;
+        height: 36px;
+    }
+    
+    #featured-carousel h2 {
+        font-size: 1.5rem !important;
+    }
+}
